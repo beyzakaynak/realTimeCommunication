@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Sanal Sınıf Aracı</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dosya.css">
+    <script src="https://kit.fontawesome.com/6510466b6c.js" crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="https://github.com/malsup/media/raw/master/jquery.media.js?v0.92"></script>
+    <!-- <script type="text/javascript" src="jquery.metadata.js"></script> -->
+
+
+    <script>
+        const params = new URLSearchParams(location.search);
+        if (!params.get("room")) location.href = "/";
+    </script>
+</head>
+
+<body>
+    <div class="overlay" id="overlay">
+        <div class="box">
+            <div class="head-name">İsminizi Giriniz</div>
+            <input type="text" class="name-field" placeholder="İsminizi giriniz.." id="name-field" /><br>
+            <button class="continue-name">Başlat</button>
+
+        </div>
+    </div>
+    <div class="container-room">
+        <div class="left-cont">
+
+            <div class="video-cont-single" id="vcont">
+                <div class="video-box">
+                    <video class="video-frame" id="vd1" autoplay playsinline>
+                    </video>
+                    <div class="nametag" id="myname">yourname</div>
+                    <div class="mute-icon" id="mymuteicon"><i class="fas fa-microphone-slash"></i></div>
+                    <div class="video-off" id="myvideooff">Video Kapalı</div>
+                </div>
+            </div>
+
+            <div class="whiteboard-cont">
+                <canvas id="whiteboard" height="1000" width="1000"></canvas>
+
+                <div class="metinyaz-cont">
+
+                </div>
+
+                <div class="colors-cont">
+                    <div class="black" onclick="setColor('black')"></div>
+                    <div class="red" onclick="setColor('#e74c3c')"></div>
+                    <div class="yellow" onclick="setColor('#f1c40f')"></div>
+                    <div class="green" onclick="setColor('#badc58')"></div>
+                    <div class="blue" onclick="setColor('#3498db')"></div>
+                    <div class="orange" onclick="setColor('#e67e22')"></div>
+                    <div class="purple" onclick="setColor('#9b59b6')"></div>
+                    <div class="pink" onclick="setColor('#fd79a8')"></div>
+                    <div class="brown" onclick="setColor('#834c32')"></div>
+                    <div class="grey" onclick="setColor('gray')"></div>
+                    <div class="eraser tooltip" onclick="setEraser()"><i class="fas fa-eraser"></i> <span class="tooltiptext">Sil</span></div>
+                    <div class="clearboard tooltip" onclick="clearBoard()"><i class="fas fa-trash-alt"></i> <span class="tooltiptext">Temizle</span></div>
+                    <div class="metin tooltip" onclick="metin()"><i class="fas fa-comment-alt"></i> <span class="tooltiptext">Metin yaz</span></div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="utils">
+
+                    <div class="audio">
+                        <i class="fas fa-microphone"></i>
+                    </div>
+                    <div class="novideo">
+                        <i class="fas fa-video"></i>
+                    </div>
+
+                    <div class="board-icon tooltip">
+                        <i class="fas fa-chalkboard"></i>
+                        <span class="tooltiptext">Beyaz Tahta</span>
+                    </div>
+
+                    <div class="sharefile tooltip">
+                        <i class="fas fa-file-upload"></i>
+                        <span class="tooltiptext">Dosya Paylaş</span>
+                    </div>
+
+                    <div class="record-video tooltip">
+                        <i class="fas fa-video"></i>
+                        <span class="tooltiptext">Video Kayıt</span>
+                    </div>
+
+                    <div class="download-video tooltip" style="visibility:hidden;">
+                        <i class="fas fa-download"></i>
+                        <span class="tooltiptext">Video İndir</span>
+                    </div>
+
+
+                    <div class="cutcall tooltip">
+                        <i class="fas fa-phone-slash"></i>
+                        <span class="tooltiptext">Konuşmadan Ayrıl</span>
+                    </div>
+
+
+
+
+                </div>
+
+
+
+                <div class="copycode-cont">
+                    <div class="roomcode"></div>
+                    <button class="copycode-button" onclick="CopyClassText()">Kodu Kopyala</button>
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+        <div class="right-cont">
+            <div class="head-title">
+
+                <div class="chats"><i class="fas fa-comment-alt mr-1"></i>Mesajlar</div>
+
+
+
+            </div>
+
+            <div class="chat-cont">
+
+            </div>
+            <div class="chat-input-cont">
+                <div class="ci-cont"><input type="text" class="chat-input" placeholder="Mesajınızı buraya giriniz.."></div>
+                <div class="ci-send"><button class="chat-send">Gönder</button></div>
+            </div>
+
+            <div class="select-file-dialog" style="display:none">
+
+                <div id="dialog-content">
+                    <div id="select-file">
+                        <div id="label">Yüklemek İstediğiniz Bir Dosya seçin:</div>
+                        <input type="file" id="select-file-input" name="files" />
+                    </div>
+                    <br />
+                    <button disabled id="sendFile">Yükle</button>
+                    <button disabled id="abortButton">İptal Et</button>
+
+
+
+                    <div class="progress">
+                        <div class="label">Yükleniyor: </div>
+                        <progress id="sendProgress" max="0" value="0"></progress>
+                    </div>
+
+                    <div class="progress">
+                        <div class="label">Alınıyor: </div>
+                        <progress id="receiveProgress" max="0" value="0"></progress>
+                    </div>
+
+
+                    <div id="bitrate"></div>
+                    <a id="download"></a>
+                    <span id="status"></span>
+
+
+                    <div id="dialog-footer">
+                        <!--   <button id="ok-button" disabled>Gönder</button>  -->
+                        <button id="cancel-button" class="cancel-button">Çıkış</button>
+                    </div>
+        </div>
+    </div>
+
+    <!--  <a class="viewpdf" href="../dene.pdf">PDF File</a>  -->
+                    </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/room.js"></script>
+    <script src="js/dosyapaylas.js"></script>
+</body>
+
+</html>
