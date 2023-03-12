@@ -1,2 +1,2 @@
 # realTimeCommunication
- WebRTC video-chat
+ WebRTC video-chat application using node.js
